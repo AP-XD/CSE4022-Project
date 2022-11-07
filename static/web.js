@@ -4,7 +4,6 @@ const summarize_button = document.getElementById("my_button");
 const download_button = document.getElementById("download_button");
 const percent_dropdown = document.getElementById('percent-dropdown');
 const choice_dropdown = document.getElementById('summary-dropdown');
-
 const youtube_div = document.getElementById("youtube");
 const text_out_main_div = document.getElementById("text_out_main");
 const re_summarize_element = document.getElementById('re_summarize');
@@ -14,7 +13,7 @@ summarize_button.addEventListener("click", initializeSummary);
 // Button Click Listener for downloadScript() Function
 download_button.addEventListener("click", downloadScript);
 // Creating a dictionary to store download related info once the summary processing is complete.
-const download_info = {script: "", video_id: "", video_percent: "", video_algo: ""}
+const download_info = { script: "", video_id: "", video_percent: "", video_algo: "" }
 
 // Making Summarize button disabled on start
 summarize_button.disabled = true;
@@ -54,55 +53,53 @@ function initializeSummary() {
             // Making Selection Div invisible, and text output as visible.
             youtube_div.style.display = "none";
             text_out_main_div.style.display = "block";
-
-            // https://ytsum.herokuapp.com
             // http://127.0.0.1:5000
             // Fetch request to our server. (GET request with arguments received from popup.html
-            fetch("https://ytsum.herokuapp.com/summarize/?id=" + video_id +
+            fetch("http://127.0.0.1:5000/summarize/?id=" + video_id +
                 "&percent=" + percent + "&choice=" + choice)
                 .then(response => response.json()).then(result => {
-                // Result now contains the response in JSON
-                // Sending result back to popup.html
-                process_element.innerHTML = result.message;
-                if (result.success) {
-                    // If result was successfully received. Then, parse the result_response JSON
-                    const response_json = (result.response);
+                    // Result now contains the response in JSON
+                    // Sending result back to popup.html
+                    process_element.innerHTML = result.message;
+                    if (result.success) {
+                        // If result was successfully received. Then, parse the result_response JSON
+                        const response_json = (result.response);
 
-                    // Use the values present in JSON for displaying summary.
-                    text_out_content_element.innerHTML = "<b>Processed Summary:</b> " + response_json.processed_summary
-                        + "<p>In your video, there are <b>" + response_json.length_original + "</b> characters in <b>" + response_json.sentence_original + "</b> sentences."
-                        + "<br>The processed summary has <b>" + response_json.length_summary + "</b> characters in <b>" + response_json.sentence_summary + "</b> sentences."
-                        + "</br><br>";
+                        // Use the values present in JSON for displaying summary.
+                        text_out_content_element.innerHTML = "<b>Processed Summary:</b> " + response_json.processed_summary
+                            + "<p>In your video, there are <b>" + response_json.length_original + "</b> characters in <b>" + response_json.sentence_original + "</b> sentences."
+                            + "<br>The processed summary has <b>" + response_json.length_summary + "</b> characters in <b>" + response_json.sentence_summary + "</b> sentences."
+                            + "</br><br>";
 
-                    // Populating the globally created dictionary
-                    download_info.script = response_json.processed_summary
-                    download_info.video_id = video_id
-                    download_info.video_algo = choice.replaceAll('-', '_')
-                    download_info.video_percent = percent
-                    // Displaying download button
-                    download_button.style.display = "block";
-                    // Text Beautification: Aligning Text to be justified
-                    text_out_content_element.style.textAlign = "justify";
-                    text_out_content_element.style.textJustify = "inter-word";
-                    // Enabling re-summarize element
-                    re_summarize_element.style.display = "block";
-                } else {
-                    // We failed: Reason is already pushed to UI in process_element (response.result_message has reason)
+                        // Populating the globally created dictionary
+                        download_info.script = response_json.processed_summary
+                        download_info.video_id = video_id
+                        download_info.video_algo = choice.replaceAll('-', '_')
+                        download_info.video_percent = percent
+                        // Displaying download button
+                        download_button.style.display = "block";
+                        // Text Beautification: Aligning Text to be justified
+                        text_out_content_element.style.textAlign = "justify";
+                        text_out_content_element.style.textJustify = "inter-word";
+                        // Enabling re-summarize element
+                        re_summarize_element.style.display = "block";
+                    } else {
+                        // We failed: Reason is already pushed to UI in process_element (response.result_message has reason)
+                        text_out_content_element.innerHTML = "We failed due to above reason.";
+                        text_out_content_element.style.textAlign = "center";
+                        // Enabling re-summarize element
+                        re_summarize_element.style.display = "block";
+                    }
+                }).catch(error => {
+                    // Network issue occurred during fetch probably. Logging and sending result backs.
+                    console.log(error);
+                    process_element.innerHTML = "A network issue was encountered. Please retry.";
+                    // We failed to fetch: Reason is already pushed to UI in process_element (response.result_message has reason)
                     text_out_content_element.innerHTML = "We failed due to above reason.";
                     text_out_content_element.style.textAlign = "center";
                     // Enabling re-summarize element
                     re_summarize_element.style.display = "block";
-                }
-            }).catch(error => {
-                // Network issue occurred during fetch probably. Logging and sending result backs.
-                console.log(error);
-                process_element.innerHTML = "A network issue was encountered. Please retry.";
-                // We failed to fetch: Reason is already pushed to UI in process_element (response.result_message has reason)
-                text_out_content_element.innerHTML = "We failed due to above reason.";
-                text_out_content_element.style.textAlign = "center";
-                // Enabling re-summarize element
-                re_summarize_element.style.display = "block";
-            })
+                })
         } else {
             // Alerting user that they entered wrong URL
             alert("Your YouTube video URL is invalid. Please retry.");

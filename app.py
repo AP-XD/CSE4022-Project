@@ -12,7 +12,7 @@ import nltk
 # Other Imports
 import os
 import sys
-
+import re
 # Summarizer Import (Our Another File: summarizer.py)
 from summarizer import gensim_summarize, spacy_summarize, nltk_summarize, sumy_lsa_summarize, sumy_luhn_summarize, \
     sumy_text_rank_summarize
@@ -57,19 +57,29 @@ def create_app():
         # Checking whether all parameters exist or not
         if video_id and percent and choice:
             # Every parameter exists here: checking validity of choice
-            choice_list = ["gensim-sum", "spacy-sum", "nltk-sum", "sumy-lsa-sum", "sumy-luhn-sum", "sumy-text-rank-sum"]
+            choice_list = ["gensim-sum", "spacy-sum", "nltk-sum",
+                           "sumy-lsa-sum", "sumy-luhn-sum", "sumy-text-rank-sum"]
             if choice in choice_list:
-                # Choice Correct: Proceeding with Transcript Fetch and its Summarization
                 try:
                     # Using Formatter to store and format received subtitles properly.
                     formatter = TextFormatter()
-                    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-                    formatted_text = formatter.format_transcript(transcript).replace("\n", " ")
-
+                    transcript_list = YouTubeTranscriptApi.list_transcripts(
+                        video_id)
+                    # filter for manually created transcripts
+                    transcript = transcript_list.find_manually_created_transcript([
+                                                                                  'en', 'en-GB'])
+                    formatted_text = ""
+                    # filter unwanted phrases i.e. [Music],etc. in transcript
+                    pat = re.compile(r"\[[A-Za-z ]*\]")
+                    script = formatter.format_transcript(
+                        transcript.fetch()).replace("\n", " ")
+                    for text in transcript.fetch():
+                        t = text["text"]
+                        if not re.fullmatch(pat, t):
+                            formatted_text += t + " "
                     # Checking the length of sentences in formatted_text string, before summarizing it.
+                    # print(nltk.sent_tokenize(formatted_text))
                     num_sent_text = len(nltk.sent_tokenize(formatted_text))
-
-                    # Pre-check if the summary will have at least one line .
                     select_length = int(num_sent_text * (int(percent) / 100))
 
                     # Summary will have at least 1 line. Proceed to summarize.
@@ -102,7 +112,7 @@ def create_app():
 
                             # Checking the length of sentences in summary string.
                             num_sent_summary = len(nltk.sent_tokenize(summary))
-
+                            print(summary)
                             # Returning Result
                             response_list = {
                                 # 'fetched_transcript': formatted_text,
@@ -194,7 +204,7 @@ def create_app():
 
     @app.route('/')
     def root_function():
-       
+
         # We are at web.html, online input boxes are there to summarize the given video URL.
         # Displaying web.html to the end user
         return render_template('web.html')

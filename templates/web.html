@@ -20,9 +20,11 @@
 </head>
 
 <body>
-    <img src="/static/yt_icon_rgb.svg" height="64" width="64" alt="YouTube Icon">
-    <!--Titles-->
-    <h1 style="font-weight: 300;">YouTube Description Generator</h1>
+    <div class="flexf">
+        <img style="padding:1rem" src="/static/yt_icon_rgb.svg" height="64" width="64" alt="YouTube Icon">
+        <!--Titles-->
+        <h1 style="font-weight: 300;">YouTube Description Generator</h1>
+    </div>
     <h3 style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Generate Description of your video.<br>Within
         seconds.</h3>
     <!--YouTube Div: Only Visible when it is YouTube URL-->
@@ -66,7 +68,7 @@
         <button class="button" style="margin-top: -5px;" id="my_button" disabled><b>Generate</b></button>
     </div>
     <!--Text Div: Summary Status and Response-->
-    <div id="text_out_main" style="display: none;">
+    <div id="text_out_main" style="display: none;  padding-right: 12rem;padding-left: 12rem;">
         <h4 id="current_process">Generating Description</h4>
         <div id="text-out">Please Wait</div>
         <button class="button" style="margin:auto; display: none" id="download_button"><b>Download Script</b></button>

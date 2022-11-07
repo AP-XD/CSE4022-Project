@@ -219,15 +219,6 @@ def create_app():
     def summarizer_api_info_route():
         return render_template('api.html')
 
-    @app.before_request
-    # Before Request Function: We are redirecting any HTTP requests to HTTPS especially on heroku environment.
-    def enforce_https_in_heroku():
-        if 'DYNO' in os.environ:
-            if request.headers.get('X-Forwarded-Proto') == 'http':
-                url = request.url.replace('http://', 'https://', 1)
-                code = 301
-                return redirect(url, code=code)
-
     return app
 
 
@@ -235,4 +226,4 @@ if __name__ == '__main__':
     # Running Flask Application
     # app.run()
     flask_app = create_app()
-    serve(flask_app, host='0.0.0.0', port=80, debug=False, url_scheme='https')
+    serve(flask_app, debug=True)

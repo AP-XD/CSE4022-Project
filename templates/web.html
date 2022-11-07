@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/web.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Add title to this HTML file.-->
+    <title>YouTube Description Generator</title>
+
+    <link href="/static/favicon.png" rel="icon">
+
+    <meta
+        content="Online Tool to generate Description of an eligible YouTube Video by summarization of its transcript. The video should have well formatted closed-captions to perform summarization by various techniques."
+        name="description">
+</head>
+
+<body>
+    <img src="/static/yt_icon_rgb.svg" height="64" width="64" alt="YouTube Icon">
+    <!--Titles-->
+    <h1 style="font-weight: 300;">YouTube Description Generator</h1>
+    <h3 style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Generate Description of your video.<br>Within
+        seconds.</h3>
+    <!--YouTube Div: Only Visible when it is YouTube URL-->
+    <div id="youtube">
+        <input type="text" id="url_input" placeholder="YouTube Video URL">
+        <br>
+        <label for="url_input">Youtube URL Here</label>
+
+        <!--Summary Choice Selection Dropdown-->
+        <div class="custom-select">
+            <select id="summary-dropdown">
+                <option class="dropdown-text" value="0">Description Generation Algorithm</option>
+                <option class="dropdown-text" value="1">Gensim Summarization based on Text Rank</option>
+                <option class="dropdown-text" value="2">Frequency Based (NLTK)</option>
+                <option class="dropdown-text" value="3">Frequency Based (Spacy)</option>
+                <option class="dropdown-text" value="4">Latent Semantic Analysis Based (Sumy)</option>
+                <option class="dropdown-text" value="5">Luhn Algorithm Based (Sumy)</option>
+                <option class="dropdown-text" value="6">Text Rank Algorithm Based (Sumy)</option>
+            </select>
+            <br>
+            <label for="summary-dropdown">Choose Your Description Generation Algorithm.
+        </div>
+        <!--Percent Selection Dropdown-->
+        <div class="custom-select" style="margin-top: -5px;">
+            <select id="percent-dropdown">
+                <option class="dropdown-text" value="0">%</option>
+                <option class="dropdown-text" value="1">10%</option>
+                <option class="dropdown-text" value="2">15%</option>
+                <option class="dropdown-text" value="3">20%</option>
+                <option class="dropdown-text" value="4">25%</option>
+                <option class="dropdown-text" value="5">30%</option>
+                <option class="dropdown-text" value="6">40%</option>
+                <option class="dropdown-text" value="7">50%</option>
+                <option class="dropdown-text" value="8">60%</option>
+            </select>
+            <br>
+            <label for="percent-dropdown">Select a percentage.<br>Description will be in
+                approx. X% lines of the available transcript.</label>
+        </div>
+        <!--Button for Making Summarization Request-->
+        <button class="button" style="margin-top: -5px;" id="my_button" disabled><b>Generate</b></button>
+    </div>
+    <!--Text Div: Summary Status and Response-->
+    <div id="text_out_main" style="display: none;">
+        <h4 id="current_process">Generating Description</h4>
+        <div id="text-out">Please Wait</div>
+        <button class="button" style="margin:auto; display: none" id="download_button"><b>Download Script</b></button>
+        <h5 id="re_summarize" style="display: none;">
+            Click <a href="javascript:location.reload();">here</a> to Generate Description of another video.</h5>
+    </div>
+
+    <script src="/static/web.js"></script>
+    <!--Promotional Div-->
+    <div id="promote">
+        <h5 style="font-family: 'Roboto', sans-serif; font-weight: 300;">Made with &#10084;&#65039; in
+            India.
+        </h5>
+    </div>
+</body>
+
+</html>
